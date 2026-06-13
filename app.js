@@ -458,7 +458,10 @@ async function tutorChiamata(mode, text, outEl){
   try{
     const headers={"Content-Type":"application/json"};
     if(TUT.code) headers["x-access-code"]=TUT.code;
-    const r=await fetch(TUT.url,{method:"POST",headers,body:JSON.stringify({mode,text})});
+    let url=(TUT.url||"").trim().replace(/\/+$/,"");
+    if(url && !/^https?:\/\//i.test(url)) url="https://"+url;   // aggiunge https:// se manca
+    url=url.replace(/^http:\/\//i,"https://");                  // forza https: evita il redirect che trasforma POST in GET (causa del 405)
+    const r=await fetch(url,{method:"POST",headers,body:JSON.stringify({mode,text})});
     let data={}; try{ data=await r.json(); }catch(e){}
     if(!r.ok || data.error){ outEl.innerHTML='<div class="feedback show no"><div class="titolo">Ops…</div><div>'+esc(data.error||("Errore "+r.status))+'</div></div>'; return; }
     let res=null; try{ res=JSON.parse(data.risultato); }catch(e){}
