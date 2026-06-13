@@ -1,0 +1,15 @@
+{
+  "name": "Latino facile",
+  "short_name": "Latino",
+  "description": "Aiuto allo studio del latino pensato per dislessia e disgrafia: i casi, le tabelle e gli esercizi senza scrivere.",
+  "lang": "it",
+  "start_url": ".",
+  "scope": ".",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f4ecda",
+  "theme_color": "#3b6ea5",
+  "icons": [
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}

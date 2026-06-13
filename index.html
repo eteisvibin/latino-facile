@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="it" data-theme="crema" data-font="standard">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Latino facile</title>
+<meta name="description" content="Studiare il latino con dislessia e disgrafia: casi, tabelle, complementi, traduzione guidata, lessico, esercizi e timer Pomodoro.">
+<meta name="theme-color" content="#3b6ea5">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon.svg">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="ruler" aria-hidden="true"></div>
+
+<header>
+  <span class="logo">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 5a2 2 0 0 1 2-2h9l5 5v11a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V5z" opacity=".18"/><path fill="none" stroke="currentColor" stroke-width="1.6" d="M14 3v5h5M8 12h8M8 16h6"/></svg>
+    Latino facile
+  </span>
+  <span class="spacer"></span>
+  <button class="btn small" id="pomoBtn" title="Timer Pomodoro" aria-label="Apri il timer Pomodoro">🍅</button>
+  <button class="btn ghost small" id="homeBtn" title="Inizio" aria-label="Vai all'inizio">🏠</button>
+  <button class="btn small" id="setBtn" aria-label="Apri impostazioni di lettura">Aa <span class="lbl-imp">Impostazioni</span></button>
+</header>
+
+<main>
+  <!-- HOME -->
+  <section id="home" class="view active">
+    <div id="streakRoot"></div>
+    <div class="card">
+      <h1 id="saluto" style="margin-top:.2rem">Ciao! 👋 Impariamo il latino con calma.</h1>
+      <p class="lead">Qui non devi scrivere niente: si impara <b>toccando</b>, <b>guardando i colori</b> e <b>ascoltando</b> 🔊. Puoi ingrandire il testo, cambiare i colori e mettere il tuo nome dal tasto <b>Aa Impostazioni</b>.</p>
+      <p class="nota">Non sai da dove iniziare? Parti da <b>“Capire i casi”</b>, poi <b>“Le tabelle”</b>. E quando studi, prova il <b>🍅 Pomodoro</b> qui in alto. 💡</p>
+    </div>
+    <div id="fraseRoot"></div>
+    <div class="menu" id="homeMenu"></div>
+  </section>
+
+  <!-- Sezioni costruite da app.js -->
+  <section id="casi" class="view"><div id="casiRoot"></div></section>
+  <section id="tabelle" class="view"><div id="tabelleRoot"></div></section>
+  <section id="complementi" class="view"><div id="complementiRoot"></div></section>
+  <section id="preposizioni" class="view"><div id="preposizioniRoot"></div></section>
+  <section id="allenati" class="view"><div class="card" id="quizArea"></div></section>
+  <section id="traduci" class="view"><div id="traduciRoot"></div></section>
+  <section id="lessico" class="view"><div id="lessicoRoot"></div></section>
+  <section id="progressi" class="view"><div id="progressiRoot"></div></section>
+
+  <!-- GUIDA -->
+  <section id="guida" class="view">
+    <button class="btn ghost small back" data-go="home">← Inizio</button>
+    <div class="card">
+      <h2>🧭 Per chi la aiuta (mamma, papà, tutor)</h2>
+      <p class="lead">Questa app è uno <b>strumento compensativo</b>: serve a togliere gli ostacoli (memoria a vuoto, scrittura, lettura faticosa) per far emergere quello che lei sa davvero. Non è una scorciatoia, sono “gli occhiali” per imparare.</p>
+      <h3>Come usarla insieme</h3>
+      <ul>
+        <li><b>Poco e spesso:</b> 10–15 minuti al giorno valgono più di un'ora a settimana. Usate il <b>🍅 Pomodoro</b> in alto per studiare a piccoli blocchi con pause.</li>
+        <li><b>Ordine consigliato:</b> Capire i casi → Tabelle → Complementi → Traduci passo passo. Lessico ed Esercizi ogni giorno, a piccole dosi.</li>
+        <li><b>Falla guidare a lei:</b> lascia che tocchi, giri le schede, avvii l'ascolto 🔊. L'autonomia è un obiettivo.</li>
+        <li><b>Tabelle sempre aperte:</b> tenerle a portata durante i compiti <i>non è copiare</i> — è ciò che la legge prevede per i DSA.</li>
+      </ul>
+      <h3>Per proteggere la serenità</h3>
+      <ul>
+        <li>Valorizza lo <b>sforzo e la strategia</b>, non solo la risposta giusta.</li>
+        <li>Se i numeri la mettono in ansia, attiva <b>“Nascondi punteggio”</b> nelle Impostazioni.</li>
+        <li>Gli errori non “puniscono”: ogni risposta sbagliata mostra la spiegazione.</li>
+      </ul>
+      <h3>I casi in 20 secondi</h3>
+      <ul>
+        <li><b class="nom">Nominativo</b> = chi fa (soggetto) · <b class="gen">Genitivo</b> = di chi (“di”) · <b class="dat">Dativo</b> = a chi (“a”)</li>
+        <li><b class="acc">Accusativo</b> = chi subisce (oggetto) · <b class="voc">Vocativo</b> = per chiamare · <b class="abl">Ablativo</b> = con/dove/quando/da</li>
+      </ul>
+      <p class="nota">La pronuncia usata per l'ascolto è quella <b>classica</b> (c sempre dura, v = u). È un'approssimazione fatta con la voce italiana del dispositivo.</p>
+    </div>
+  </section>
+</main>
+
+<footer>Fatto con affetto per studiare il latino senza ansia. · <span id="annoFooter"></span></footer>
+
+<!-- BARRA IN BASSO -->
+<nav class="tabbar" aria-label="Navigazione rapida">
+  <button data-go="home"><span class="ic">🏠</span>Inizio</button>
+  <button data-go="tabelle"><span class="ic">📋</span>Tabelle</button>
+  <button data-go="traduci"><span class="ic">🧩</span>Traduci</button>
+  <button data-go="allenati"><span class="ic">🎯</span>Allenati</button>
+  <button data-go="lessico"><span class="ic">🔤</span>Lessico</button>
+</nav>
+
+<!-- IMPOSTAZIONI -->
+<div class="backdrop" id="backdrop"></div>
+<aside class="drawer" id="drawer" aria-label="Impostazioni di lettura" aria-hidden="true">
+  <div style="display:flex;align-items:center;gap:.5rem"><h2 style="flex:1">Aa Impostazioni</h2>
+    <button class="btn ghost small" id="closeSet" aria-label="Chiudi">✕</button></div>
+  <p class="nota">Le tue scelte restano salvate su questo dispositivo.</p>
+
+  <div class="set-row"><label for="nomeInput">Il tuo nome</label>
+    <input type="text" id="nomeInput" class="nome-input" maxlength="20" placeholder="(facoltativo) es. Giulia" autocomplete="off"></div>
+
+  <div class="set-row"><label>Colore preferito</label>
+    <div class="choices" id="accentChoices">
+      <button class="sw" data-accent="blu" style="background:#3b6ea5" aria-label="Blu"></button>
+      <button class="sw" data-accent="viola" style="background:#6d4ca8" aria-label="Viola"></button>
+      <button class="sw" data-accent="rosa" style="background:#c2487f" aria-label="Rosa"></button>
+      <button class="sw" data-accent="verde" style="background:#2f7d52" aria-label="Verde"></button>
+      <button class="sw" data-accent="turchese" style="background:#17807b" aria-label="Turchese"></button>
+      <button class="sw" data-accent="arancio" style="background:#c4651a" aria-label="Arancione"></button>
+    </div></div>
+
+  <div class="set-row"><label>Dimensione del testo</label>
+    <div class="stepper"><button class="btn" data-step="fs:-2" aria-label="Riduci">A−</button><output id="outFs"></output><button class="btn" data-step="fs:2" aria-label="Ingrandisci">A+</button></div></div>
+
+  <div class="set-row"><label>Spazio tra le righe</label>
+    <div class="stepper"><button class="btn" data-step="lh:-0.1" aria-label="Riduci">−</button><output id="outLh"></output><button class="btn" data-step="lh:0.1" aria-label="Aumenta">+</button></div></div>
+
+  <div class="set-row"><label>Spazio tra le lettere</label>
+    <div class="stepper"><button class="btn" data-step="ls:-0.02" aria-label="Riduci">−</button><output id="outLs"></output><button class="btn" data-step="ls:0.02" aria-label="Aumenta">+</button></div></div>
+
+  <div class="set-row"><label>Spazio tra le parole</label>
+    <div class="stepper"><button class="btn" data-step="ws:-0.02" aria-label="Riduci">−</button><output id="outWs"></output><button class="btn" data-step="ws:0.02" aria-label="Aumenta">+</button></div></div>
+
+  <div class="set-row"><label>Carattere</label>
+    <div class="choices" id="fontChoices"><button class="btn" data-font="standard">Standard</button><button class="btn" data-font="leggibile">Più leggibile</button></div></div>
+
+  <div class="set-row"><label>Colori dello sfondo</label>
+    <div class="choices" id="themeChoices"><button class="btn" data-theme="crema">Crema</button><button class="btn" data-theme="chiaro">Chiaro</button><button class="btn" data-theme="scuro">Scuro</button></div></div>
+
+  <div class="set-row toggle"><label for="rulerSwitch">Righello di lettura</label>
+    <span class="switch"><input type="checkbox" id="rulerSwitch"><span class="track"></span></span></div>
+
+  <div class="set-row toggle"><label for="puntiSwitch">Nascondi punteggio<br><span class="nota">toglie i voti, lascia gli incoraggiamenti</span></label>
+    <span class="switch"><input type="checkbox" id="puntiSwitch"><span class="track"></span></span></div>
+
+  <div class="set-row"><button class="btn ghost" id="resetSet">↺ Ripristina tutto</button></div>
+</aside>
+
+<!-- POMODORO -->
+<div class="backdrop" id="pomoBack"></div>
+<div class="modal" id="pomoModal" role="dialog" aria-label="Timer Pomodoro" aria-hidden="true">
+  <div style="display:flex;align-items:center;gap:.5rem"><h2 style="flex:1;margin:.2rem 0">🍅 Pomodoro</h2>
+    <button class="btn ghost small" id="pomoClose" aria-label="Chiudi">✕</button></div>
+  <p class="nota">Studi concentrata per un po', poi fai una pausa. Aiuta a non stancarti.</p>
+  <div class="pomo-fase studio" id="pomoFase">📚 Studio</div>
+  <div class="pomo-display" id="pomoDisplay">25:00</div>
+  <div style="display:flex;gap:.6rem;justify-content:center;margin:.4rem 0 1rem">
+    <button class="btn primary" id="pomoToggle">▶ Avvia</button>
+    <button class="btn" id="pomoReset">↺ Reset</button>
+  </div>
+  <div class="set-row"><label>Metodo veloce</label>
+    <div class="choices" id="pomoPreset">
+      <button class="btn" data-st="25" data-pa="5">25 / 5</button>
+      <button class="btn" data-st="50" data-pa="10">50 / 10</button>
+    </div></div>
+  <div class="set-row"><label>Personalizza</label>
+    <div class="stepper" style="margin-bottom:.5rem"><span style="min-width:4em">Studio</span><button class="btn small" data-pomo="studio:-5" aria-label="Meno">−</button><output id="pomoStudio">25 min</output><button class="btn small" data-pomo="studio:5" aria-label="Più">+</button></div>
+    <div class="stepper"><span style="min-width:4em">Pausa</span><button class="btn small" data-pomo="pausa:-1" aria-label="Meno">−</button><output id="pomoPausa">5 min</output><button class="btn small" data-pomo="pausa:1" aria-label="Più">+</button></div>
+  </div>
+</div>
+
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

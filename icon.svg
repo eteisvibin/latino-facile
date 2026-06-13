@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Latino facile">
+  <rect width="512" height="512" rx="112" fill="#3b6ea5"/>
+  <text x="256" y="312" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="232" font-weight="700" fill="#fffdf6">La</text>
+  <path d="M150 372 q106 64 212 0" fill="none" stroke="#fcd34d" stroke-width="16" stroke-linecap="round"/>
+</svg>
