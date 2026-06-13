@@ -41,6 +41,8 @@ function applica(){
   const rs=qs("#rulerSwitch"); if(rs) rs.checked=!!S.ruler;
   const ps=qs("#puntiSwitch"); if(ps) ps.checked=!!S.hidePunti;
   const ni=qs("#nomeInput"); if(ni && ni.value!==S.nome) ni.value=S.nome;
+  const tu=qs("#tutorUrl"); if(tu && tu.value!==TUT.url) tu.value=TUT.url;
+  const tc=qs("#tutorCode"); if(tc && tc.value!==TUT.code) tc.value=TUT.code;
   const mc=qs('meta[name="theme-color"]'); if(mc) mc.setAttribute("content", S.theme==="scuro"?"#1e1c18":ac[0]);
   aggiornaSaluto();
 }
@@ -78,6 +80,7 @@ function vai(id){
   if(id==="allenati") avviaQuiz();
   if(id==="traduci") avviaTraduci();
   if(id==="lessico") avviaLessico();
+  if(id==="tutor") renderTutor();
   if(id==="progressi") renderProgressi();
 }
 
@@ -406,13 +409,94 @@ function renderProgressi(){
     '</div><div class="card"><h3>🏅 I tuoi traguardi</h3>'+stick+'</div>';
 }
 
+/* ---------- TUTOR AI ---------- */
+let TUT = caricaTut();
+function caricaTut(){ try{ return Object.assign({url:"",code:""}, JSON.parse(localStorage.getItem("latino-tutor")||"{}")); }catch(e){ return {url:"",code:""}; } }
+function salvaTut(){ try{ localStorage.setItem("latino-tutor", JSON.stringify(TUT)); }catch(e){} }
+function esc(s){ return (s||"").toString().replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+function escAttr(s){ return esc(s).replace(/"/g,"&quot;"); }
+let tutMode = "passopasso";
+
+function renderTutor(){
+  const box = qs("#tutorRoot");
+  if(!TUT.url){
+    box.innerHTML = '<button class="btn ghost small back" data-go="home">← Inizio</button>'+
+      '<div class="card"><h2>🦉 Tutor di latino</h2>'+
+      '<p class="lead">Il Tutor traduce <b>qualsiasi</b> versione o parola e spiega passo passo (anche italiano → latino). Va attivato una volta sola.</p>'+
+      '<div class="setup"><b>Per accenderlo:</b><ol><li>Apri il file <b>SETUP-TUTOR.md</b> nella cartella e segui i 3 passaggi (una chiave AI + un “ponte” gratuito).</li>'+
+      '<li>Poi qui in <b>Aa Impostazioni → 🦉 Tutor AI</b> incolla l\'indirizzo del ponte.</li></ol></div>'+
+      '<button class="btn primary" id="vaiSet">⚙️ Apri Impostazioni</button></div>';
+    qs("#vaiSet").addEventListener("click", ()=>apriSet(true));
+    return;
+  }
+  box.innerHTML =
+    '<button class="btn ghost small back" data-go="home">← Inizio</button>'+
+    '<div class="card"><h2 class="section-title">🦉 Tutor di latino</h2>'+
+    '<p class="lead">Incolla una versione (o una frase) e scegli come tradurla.</p>'+
+    '<div class="scelte" id="tutModi">'+
+      '<button class="btn small tutmodo" data-m="passopasso">📚 Passo passo</button>'+
+      '<button class="btn small tutmodo" data-m="diretta">⚡ Diretta</button>'+
+      '<button class="btn small tutmodo" data-m="italatino">🔄 Italiano → Latino</button></div>'+
+    '<textarea id="tutText" class="tut-text" rows="5"></textarea>'+
+    '<div style="text-align:right;margin-top:.6rem"><button class="btn primary" id="tutGo">Traduci 🦉</button></div>'+
+    '<div id="tutOut"></div></div>'+
+    '<div class="card"><h3 class="section-title">🔎 Cerca una parola o una frase</h3>'+
+    '<div style="display:flex;gap:.5rem;flex-wrap:wrap"><input type="text" id="tutCerca" class="nome-input" style="flex:1;min-width:58%" placeholder="es. «puellam» oppure «rosa»">'+
+    '<button class="btn" id="tutCercaGo">Cerca</button></div><div id="tutCercaOut"></div></div>';
+  qsa(".tutmodo").forEach(b=>{ b.classList.toggle("sel", b.dataset.m===tutMode);
+    b.addEventListener("click", ()=>{ tutMode=b.dataset.m; qsa(".tutmodo").forEach(x=>x.classList.toggle("sel", x===b)); aggiornaPlaceholder(); }); });
+  aggiornaPlaceholder();
+  qs("#tutGo").addEventListener("click", ()=>tutorChiamata(tutMode, qs("#tutText").value, qs("#tutOut")));
+  qs("#tutCercaGo").addEventListener("click", ()=>tutorChiamata("parola", qs("#tutCerca").value, qs("#tutCercaOut")));
+  qs("#tutCerca").addEventListener("keydown", e=>{ if(e.key==="Enter"){ e.preventDefault(); tutorChiamata("parola", qs("#tutCerca").value, qs("#tutCercaOut")); } });
+}
+function aggiornaPlaceholder(){ const t=qs("#tutText"); if(t) t.placeholder = tutMode==="italatino" ? "Scrivi qui la frase in italiano…" : "Incolla qui la versione di latino…"; }
+async function tutorChiamata(mode, text, outEl){
+  text=(text||"").trim();
+  if(!text){ outEl.innerHTML='<p class="nota">Scrivi prima qualcosa. ✍️</p>'; return; }
+  outEl.innerHTML='<div class="tut-load">🦉 Sto pensando…</div>';
+  try{
+    const headers={"Content-Type":"application/json"};
+    if(TUT.code) headers["x-access-code"]=TUT.code;
+    const r=await fetch(TUT.url,{method:"POST",headers,body:JSON.stringify({mode,text})});
+    let data={}; try{ data=await r.json(); }catch(e){}
+    if(!r.ok || data.error){ outEl.innerHTML='<div class="feedback show no"><div class="titolo">Ops…</div><div>'+esc(data.error||("Errore "+r.status))+'</div></div>'; return; }
+    let res=null; try{ res=JSON.parse(data.risultato); }catch(e){}
+    outEl.innerHTML = res ? renderRisultato(mode,res) : '<div class="tut-res">'+esc(data.risultato||"")+'</div>';
+  }catch(e){
+    outEl.innerHTML='<div class="feedback show no"><div class="titolo">Connessione assente</div><div>Controlla l\'indirizzo del ponte (Impostazioni) e la connessione a internet.</div></div>';
+  }
+}
+function renderRisultato(mode,r){
+  if(mode==="italatino"){
+    return '<div class="tut-res"><div class="tut-lat">'+esc(r.latino)+' <button class="speak" data-t="'+escAttr(r.latino)+'" title="Ascolta">🔊</button></div>'+
+      (r.spiegazione?'<p class="nota">💡 '+esc(r.spiegazione)+'</p>':'')+'</div>';
+  }
+  if(mode==="parola"){
+    return '<div class="tut-res"><div class="tut-voce">'+esc(r.voce)+' <button class="speak" data-t="'+escAttr(r.voce)+'" title="Ascolta">🔊</button></div>'+
+      '<p><b>Che cos\'è:</b> '+esc(r.analisi)+'</p><p><b>Significa:</b> '+esc(r.significato)+'</p>'+
+      (r.esempio?'<p class="nota">Esempio: '+esc(r.esempio)+'</p>':'')+'</div>';
+  }
+  let h='<div class="tut-res">';
+  if(mode==="passopasso" && r.passi && r.passi.length){
+    h+='<div class="passi">';
+    r.passi.forEach(p=>{ h+='<div class="passo"><div class="passo-lat">'+esc(p.lat)+'</div><div class="passo-an">'+esc(p.analisi)+'</div><div class="passo-it">→ '+esc(p.it)+'</div></div>'; });
+    h+='</div>';
+  }
+  h+='<div class="due-trad"><div class="trad-box"><div class="trad-tit">📖 Letterale</div><div>'+esc(r.letterale)+'</div></div>'+
+     '<div class="trad-box"><div class="trad-tit">✨ Italiano scorrevole</div><div>'+esc(r.scorrevole)+'</div></div></div>';
+  if(r.note) h+='<p class="nota">💡 '+esc(r.note)+'</p>';
+  return h+'</div>';
+}
+
 /* ---------- HOME ---------- */
 const MENU = [
   {id:"casi", e:"🎨", t:"Capire i casi", d:"La chiave di tutto: a che serve ogni caso, con i colori."},
   {id:"tabelle", e:"📋", t:"Le tabelle", d:"5 declinazioni, aggettivi, pronomi e verbi. Con modalità studio."},
   {id:"complementi", e:"🔗", t:"Complementi", d:"L'analisi logica: ogni complemento → quale caso latino."},
   {id:"preposizioni", e:"🧱", t:"Preposizioni", d:"Quali reggono accusativo e quali ablativo."},
-  {id:"traduci", e:"🧩", t:"Traduci passo passo", d:"Frasi spiegate parola per parola, con la voce."},
+  {id:"traduci", e:"🧩", t:"Traduci passo passo", d:"Frasi pronte spiegate parola per parola, con la voce."},
+  {id:"tutor", e:"🦉", t:"Tutor AI (traduci tutto)", d:"Incolla QUALSIASI versione o parola: traduce e spiega, anche italiano→latino."},
   {id:"lessico", e:"🔤", t:"Lessico", d:"Le parole più importanti, a schede, con i derivati italiani."},
   {id:"allenati", e:"🎯", t:"Allenati", d:"Esercizi a tocco, niente da scrivere, feedback gentile."},
   {id:"progressi", e:"🌱", t:"I tuoi progressi", d:"Cosa hai imparato e i tuoi traguardi."},
@@ -473,6 +557,8 @@ document.addEventListener("click", e=>{
   if(h && document.body.classList.contains("nascondi")){ h.classList.toggle("svelata"); return; }
   const sp = e.target.closest(".speak[data-say]");
   if(sp){ const el = qs("#"+sp.dataset.say); if(el) parla(el.innerText); }
+  const spl = e.target.closest(".speak[data-t]");
+  if(spl){ parlaLa(spl.dataset.t); }
   const tb = e.target.closest(".tabbtn");
   if(tb){ tabAttiva=tb.dataset.tab; renderTab(); }
 });
@@ -494,6 +580,8 @@ function initEventi(){
   qs("#rulerSwitch").addEventListener("change", e=>{ S.ruler=e.target.checked; applica(); salvaImp(); });
   qs("#puntiSwitch").addEventListener("change", e=>{ S.hidePunti=e.target.checked; applica(); salvaImp(); });
   qs("#nomeInput").addEventListener("input", e=>{ S.nome=e.target.value.slice(0,20); aggiornaSaluto(); salvaImp(); });
+  qs("#tutorUrl").addEventListener("input", e=>{ TUT.url=e.target.value.trim(); salvaTut(); });
+  qs("#tutorCode").addEventListener("input", e=>{ TUT.code=e.target.value.trim(); salvaTut(); });
   qs("#resetSet").addEventListener("click", ()=>{ const nome=S.nome; S=Object.assign({},DEFAULT); S.nome=nome; applica(); salvaImp(); });
 
   // Pomodoro

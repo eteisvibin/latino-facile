@@ -46,6 +46,7 @@
   <section id="allenati" class="view"><div class="card" id="quizArea"></div></section>
   <section id="traduci" class="view"><div id="traduciRoot"></div></section>
   <section id="lessico" class="view"><div id="lessicoRoot"></div></section>
+  <section id="tutor" class="view"><div id="tutorRoot"></div></section>
   <section id="progressi" class="view"><div id="progressiRoot"></div></section>
 
   <!-- GUIDA -->
@@ -83,7 +84,7 @@
 <nav class="tabbar" aria-label="Navigazione rapida">
   <button data-go="home"><span class="ic">🏠</span>Inizio</button>
   <button data-go="tabelle"><span class="ic">📋</span>Tabelle</button>
-  <button data-go="traduci"><span class="ic">🧩</span>Traduci</button>
+  <button data-go="tutor"><span class="ic">🦉</span>Tutor</button>
   <button data-go="allenati"><span class="ic">🎯</span>Allenati</button>
   <button data-go="lessico"><span class="ic">🔤</span>Lessico</button>
 </nav>
@@ -131,6 +132,11 @@
 
   <div class="set-row toggle"><label for="puntiSwitch">Nascondi punteggio<br><span class="nota">toglie i voti, lascia gli incoraggiamenti</span></label>
     <span class="switch"><input type="checkbox" id="puntiSwitch"><span class="track"></span></span></div>
+
+  <div class="set-row"><label>🦉 Tutor AI (traduttore)</label>
+    <input type="text" id="tutorUrl" class="nome-input" placeholder="Indirizzo del Worker (https://…workers.dev)" autocomplete="off" inputmode="url">
+    <input type="text" id="tutorCode" class="nome-input" placeholder="Codice di accesso (se impostato)" autocomplete="off" style="margin-top:.5rem">
+    <p class="nota">Attiva la sezione 🦉 Tutor. Come ottenerli: vedi <b>SETUP-TUTOR.md</b>.</p></div>
 
   <div class="set-row"><button class="btn ghost" id="resetSet">↺ Ripristina tutto</button></div>
 </aside>

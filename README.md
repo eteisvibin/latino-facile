@@ -9,7 +9,8 @@ Web-app per studiare il **latino del biennio** (allineata al manuale *«Semper. 
 - 📋 **Le tabelle** — tutte le 5 declinazioni, aggettivi, pronomi e verbi (*sum* + 4 coniugazioni + mista, presente/imperfetto/futuro), con modalità "Nascondi" per indovinare le desinenze
 - 🔗 **Complementi** — l'analisi logica: ogni complemento → quale caso latino
 - 🧱 **Preposizioni** — quali reggono accusativo e quali ablativo
-- 🧩 **Traduci passo passo** — frasi spiegate parola per parola (con la voce), poi si sceglie la traduzione
+- 🧩 **Traduci passo passo** — frasi pronte spiegate parola per parola (con la voce), poi si sceglie la traduzione
+- 🦉 **Tutor AI** — traduce *qualsiasi* versione o parola e spiega passo passo, con resa **letterale ↔ scorrevole**, e fa anche **italiano→latino**. Da attivare una volta (chiave AI + “ponte” gratuito): vedi **[SETUP-TUTOR.md](SETUP-TUTOR.md)**. Senza attivazione, tutto il resto dell'app funziona lo stesso.
 - 🔤 **Lessico** — ~65 parole a flashcard con i derivati italiani e ripasso che ripropone quelle meno sapute
 - 🎯 **Allenati** — esercizi a scelta (niente da scrivere), feedback gentile
 - 🍅 **Timer Pomodoro** — 25/5, 50/10 o personalizzato

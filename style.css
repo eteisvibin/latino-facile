@@ -295,3 +295,23 @@ body.pomo-attivo #pomoBtn{ border-color:var(--accent); color:var(--accent); }
 .sticker.on{ opacity:1; filter:none; border-color:var(--accent); background:var(--accent-soft); }
 .sticker .se{ font-size:1.8rem; line-height:1; }
 .sticker .st{ font-size:.8em; font-weight:600; margin-top:.2rem; }
+
+/* ====== TUTOR AI ====== */
+.tut-text{ width:100%; font:inherit; padding:.7rem .8rem; border:2px solid var(--border); border-radius:.8rem; background:var(--bg); color:var(--text); resize:vertical; min-height:120px; }
+.tut-text:focus-visible{ outline:3px solid var(--accent); border-color:var(--accent); }
+.tutmodo{ }
+.setup{ background:var(--bg); border-radius:.8rem; padding:.4rem .9rem; margin:.6rem 0; }
+.setup ol{ margin:.4rem 0; padding-left:1.2rem; }
+.tut-load{ text-align:center; padding:1.4rem; font-size:1.15em; color:var(--muted); animation:pulse 1.2s ease-in-out infinite; }
+@keyframes pulse{ 0%,100%{ opacity:.5; } 50%{ opacity:1; } }
+.tut-res{ margin-top:.9rem; }
+.due-trad{ display:grid; gap:.7rem; grid-template-columns:1fr; margin-top:.4rem; }
+@media(min-width:640px){ .due-trad{ grid-template-columns:1fr 1fr; } }
+.trad-box{ background:var(--bg); border:2px solid var(--border); border-radius:.8rem; padding:.7rem .85rem; }
+.trad-tit{ font-weight:800; color:var(--muted); font-size:.9em; margin-bottom:.3rem; }
+.passi{ display:grid; gap:.5rem; margin-bottom:.9rem; }
+.passo{ border-left:5px solid var(--accent); background:var(--bg); border-radius:.5rem; padding:.5rem .7rem; }
+.passo-lat{ font-weight:800; }
+.passo-an{ font-size:.92em; color:var(--muted); }
+.passo-it{ font-weight:600; }
+.tut-lat, .tut-voce{ font-size:1.4em; font-weight:800; color:var(--accent); display:flex; align-items:center; gap:.4rem; flex-wrap:wrap; }
